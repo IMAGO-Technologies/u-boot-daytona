@@ -1,0 +1,16 @@
+# Copyright (c) 2019, IMAGO Technologies GmbH.
+#
+# SPDX-License-Identifier: GPL-2.0
+
+if TARGET_VISIONBOX_DAYTONA
+
+config SYS_BOARD
+	default "visionbox_daytona"
+
+config SYS_VENDOR
+	default "imago"
+
+config SYS_CONFIG_NAME
+	default "visionbox_daytona"
+
+endif

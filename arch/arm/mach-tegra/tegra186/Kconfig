@@ -15,6 +15,14 @@ config TARGET_P2771_0000
 	  micro-B port, Ethernet, USB3 host port, SATA, PCIe, and two GPIO
 	  expansion headers.
 
+config TARGET_VISIONBOX_DAYTONA
+	bool "IMAGO VisionBox DAYTONA"
+	help
+	  The VisionBox contains the NVIDIA Tegra TX2 SoC and has the
+	  following interfaces: SD card slot, M.2 SSD, M.2 Modem (over USB 2.0),
+	  DisplayPort, 2x USB 3.0 host port, 3x Gigabit Ethernet,
+	  digital I/Os and RS-422 I/Os.
+
 endchoice
 
 config SYS_SOC
@@ -24,5 +32,6 @@ config SYS_INIT_SP_BSS_OFFSET
 	default 524288
 
 source "board/nvidia/p2771-0000/Kconfig"
+source "board/imago/visionbox_daytona/Kconfig"
 
 endif

@@ -1,0 +1,6 @@
+VISIONBOX_DAYTONA BOARD
+M:	Ralf Goebel <ralf.goebel@imago-technologies.com>
+S:	Maintained
+F:	board/imago/visionbox_daytona/
+F:	include/configs/visionbox_daytona.h
+F:	configs/visionbox-daytona_defconfig
