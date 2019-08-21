@@ -53,24 +53,31 @@
 	"ramdisk_addr_r_offset=00000000\0" \
 	"ramdisk_addr_r_size=02000000\0"
 
-#define CONFIG_BOOTCOMMAND "run mmc_boot"
+#define CONFIG_BOOTCOMMAND "run mmc1_boot; run mmc0_boot"
 
 #define _CONFIG_CMD_DISTRO_BOOTCMD_H
 #define CONFIG_PARTITION_UUIDS
 #define CONFIG_CMD_PART
 #define BOOTENV \
+	"bootdir=/boot/\0" \
 	"bootfile=Image.gz\0" \
+	"bootpart=1\0" \
 	"prefix=/boot/\0" \
-	"mmc_boot=setenv devtype mmc;" \
-	" setenv devnum 1;" \
-	" setenv bootargs ${cbootargs} root=/dev/mmcblk2p1 rootfstype=ext4;" \
-	" run bootcmd_mmc; " \
-	" setenv devnum 0; setenv bootargs ${cbootargs} rootfstype=ext4; run bootcmd_mmc;\0" \
-	"bootcmd_mmc=if mmc dev ${devnum}; then run scan_dev_for_image; fi\0" \
-	"scan_dev_for_image=if test -e ${devtype} ${devnum}:1 ${prefix}${bootfile}; then" \
-	" echo Found ${prefix}${bootfile};" \
-	" ext4load ${devtype} ${devnum}:${distro_bootpart} 0x88000000 ${prefix}${bootfile};" \
-	" unzip 0x88000000 ${kernel_addr_r}; booti ${kernel_addr_r} - ${fdt_addr}; fi\0"
+	"mmc0_boot=setenv devtype mmc; setenv devnum 0;" \
+	" setenv bootargs ${cbootargs} root=/dev/mmcblk0p1 rootfstype=ext4 ${optargs};" \
+	" if mmc dev ${devnum}; then run scan_dev_for_env; run scan_dev_for_image; fi\0" \
+	"mmc1_boot=setenv devtype mmc; setenv devnum 1;" \
+	" setenv bootargs ${cbootargs} root=/dev/mmcblk2p1 rootfstype=ext4 ${optargs};" \
+	" if mmc dev ${devnum}; then run scan_dev_for_env; run scan_dev_for_image; fi\0" \
+	"scan_dev_for_image=if test -e ${devtype} ${devnum}:${bootpart} ${bootdir}${bootfile}; then" \
+	" load ${devtype} ${devnum}:${bootpart} 0x88000000 ${bootdir}${bootfile};" \
+	" unzip 0x88000000 ${kernel_addr_r}; booti ${kernel_addr_r} - ${fdt_addr}; fi\0" \
+	"scan_dev_for_env=if test -e ${devtype} ${devnum}:${bootpart} ${bootdir}uEnv.txt;" \
+	" then echo Importing U-Boot environment ${bootdir}uEnv.txt;" \
+	" if load ${devtype} ${devnum}:${bootpart} ${scriptaddr} ${bootdir}uEnv.txt;" \
+	" then env import -t ${scriptaddr} ${filesize};" \
+	" if test -n $uenvcmd; then echo Running uenvcmd ...;run uenvcmd; fi; fi; fi\0" \
+	"optargs=isolcpus=1,2\0"
 
 #include "tegra-common-post.h"
 
@@ -81,5 +88,7 @@
 #define CONFIG_NR_DRAM_BANKS	(1024 + 2)
 
 #define CONFIG_CMD_UNZIP	/* enable unzip command support for compressed images */
+
+#define CONFIG_BOOTP_DHCP_REQUEST_DELAY 50000	/* workaround for Windows Server DHCP server */
 
 #endif
