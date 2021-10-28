@@ -64,10 +64,10 @@
 	"bootpart=1\0" \
 	"prefix=/boot/\0" \
 	"mmc0_boot=setenv devtype mmc; setenv devnum 0;" \
-	" setenv bootargs ${cbootargs} root=/dev/mmcblk0p1 rootfstype=ext4 ${optargs};" \
+	" setenv bootargs ${cbootargs} root=/dev/mmcblk0p1 rootfstype=ext4 ${optargs} quiet;" \
 	" if mmc dev ${devnum}; then run scan_dev_for_env; run scan_dev_for_image; fi\0" \
 	"mmc1_boot=setenv devtype mmc; setenv devnum 1;" \
-	" setenv bootargs ${cbootargs} root=/dev/mmcblk2p1 rootfstype=ext4 ${optargs};" \
+	" setenv bootargs ${cbootargs} root=/dev/mmcblk2p1 rootfstype=ext4 ${optargs} quiet;" \
 	" if mmc dev ${devnum}; then run scan_dev_for_env; run scan_dev_for_image; fi\0" \
 	"scan_dev_for_image=if test -e ${devtype} ${devnum}:${bootpart} ${bootdir}${bootfile}; then" \
 	" load ${devtype} ${devnum}:${bootpart} 0x88000000 ${bootdir}${bootfile};" \
